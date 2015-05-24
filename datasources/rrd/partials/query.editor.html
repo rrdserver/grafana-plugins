@@ -1,0 +1,115 @@
+<div class="editor-row">
+
+	<div  ng-repeat="target in panel.targets"
+		style="margin-bottom: 2px;"
+		ng-class="{'tight-form-disabled': target.hide}"
+		ng-controller="RRDQueryCtrl"
+		ng-init="init()">
+       
+		<div class="tight-form">
+			<ul class="tight-form-list pull-right">
+                
+				<li ng-show="parserError" class="tight-form-item">
+					<a bs-tooltip="parserError" style="color: rgb(229, 189, 28)" role="menuitem">
+						<i class="fa fa-warning"></i>
+					</a>
+				</li>
+				<li class="tight-form-item">
+					<a class="pointer" tabindex="1" ng-click="showTextEditor = !showTextEditor">
+						<i class="fa fa-pencil"></i>
+					</a>
+				</li>                
+	<!-- Menu ******* -->
+				<li class="tight-form-item">
+					<div class="dropdown">
+						<a  class="pointer dropdown-toggle" data-toggle="dropdown"  tabindex="1">
+							<i class="fa fa-bars"></i>
+						</a>
+						<ul class="dropdown-menu pull-right" role="menu">
+							<li role="menuitem">
+								<a  tabindex="1" ng-click="duplicate()">
+									Duplicate
+								</a>
+							</li>
+
+							<li role="menuitem">
+								<a  tabindex="1" ng-click="moveMetricQuery($index, $index-1)">
+									Move up
+								</a>
+							</li>
+
+							<li role="menuitem">
+								<a  tabindex="1" ng-click="moveMetricQuery($index, $index+1)">
+									Move down
+								</a>
+							</li>
+						</ul>
+					</div>
+				</li>
+	<!-- Menu ******* -->                
+				<li class="tight-form-item last">
+					<a class="pointer" tabindex="1" ng-click="removeDataQuery(target)">
+						<i class="fa fa-remove"></i>
+					</a>
+				</li>
+			</ul>
+
+			<ul class="tight-form-list">
+				<li>
+					<a  class="tight-form-item" ng-click="target.hide = !target.hide; get_data();" role="menuitem">
+						<i class="fa fa-eye"></i>
+					</a>
+				</li>
+			</ul>
+	<!-- Metric editor ****** -->
+			<input  type="text"
+					class="tight-form-clear-input span10"
+					ng-model="target.metric"
+					focus-me="showTextEditor"
+					spellcheck='false'
+					ng-model-onblur ng-change="targetTextChanged()"
+					bs-typeahead="textEditorSuggestMetrics"
+					ng-show="showTextEditor" />
+              
+			<ul class="tight-form-list" role="menu" ng-hide="showTextEditor">
+				<li ng-repeat="segment in segments" role="menuitem" graphite-segment focus-me="segment.focus"></li>
+			</ul>
+			
+			<div style="margin-left: 50%; whit-space: nowrap; with: 100%">
+			<ul class="tight-form-list" >
+				<li class="tight-form-item">
+					Consolidation:
+				</li>
+				<li>
+					<select ng-model="target.aggregator"
+						ng-change="get_data();"
+						class="tight-form-input input-small"
+						ng-options="agg for agg in aggregators">
+					</select>
+					<a bs-tooltip="target.errors.aggregator"
+						style="color: rgb(229, 189, 28)"
+						ng-show="target.errors.aggregator">
+						<i class="fa fa-warning"></i>
+					</a>
+				</li>
+				<li class="tight-form-item">
+					Alias:					
+				</li>
+				<li>
+					<input type="text"
+						class="tight-form-input input-large"
+						ng-model="target.alias"
+						ng-change="get_data();"
+						spellcheck='false'
+						placeholder="series alias"
+						data-min-length=0 data-items=100/>
+				</li>
+			</ul>
+			</div>
+	<!-- Metric editor ****** -->
+                
+			<div class="clearfix"></div>
+		</div>
+
+	</div>
+</div>
